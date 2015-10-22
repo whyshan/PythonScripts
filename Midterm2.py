@@ -13,6 +13,7 @@ for line in fileinput.input(fileName):
     words = line.split("\t")
     if len(words) > 1:
         if words[1] not in tags:
+            words[1] = words[1].strip()
             tags.append(words[1])
             counts.append(0)
         counts[tags.index(words[1])] += 1
