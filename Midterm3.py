@@ -14,7 +14,7 @@ while not done and cnt < len(numlist): # Error 4: add ":"
     if newnum < numlist[cnt]:
         numlist.insert(cnt, newnum)
         done = 1
-    cnt+=1 # Error 5
+    cnt+=1 # Error 5, cnt += 1, or dead loop
 if not done:
     numlist.append(newnum)
 
