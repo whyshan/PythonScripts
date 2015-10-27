@@ -51,6 +51,7 @@ class tweet_line:
 
     def remove_punctuation_from_string(self, string_):
         # step 1: trans all punctuations to spaces
+        # punctuations should be kept as separate words.
         punctuation = string.punctuation
         trans_table = string.maketrans(punctuation, ' ' * len(punctuation))
         clean_tweet = string_.translate(trans_table)
