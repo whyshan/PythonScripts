@@ -39,6 +39,7 @@ class tweet_line:
         self.statistics.clear()
         # remove all punctuations
         # TODO 1: how to handle '#' and '@' ???
+        # # and @ will be kept with the word, e.g. #SemST will be treated as one word.
         clean_tweet = self.remove_punctuation_from_string(self.tweet)
         # get word list
         words = clean_tweet.split(" ")
