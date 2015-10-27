@@ -53,10 +53,13 @@ class tweet_line:
         # step 1: trans all punctuations to spaces
         # punctuations should be kept as separate words.
         punctuation = string.punctuation
-        trans_table = string.maketrans(punctuation, ' ' * len(punctuation))
-        clean_tweet = string_.translate(trans_table)
+        punctuation.pop("#")
+        punctuation.pop("@")
+        #trans_table = string.maketrans(punctuation, ' ' * len(punctuation))
+        #clean_tweet = string_.translate(trans_table)
         # step 2: remove more spaces
-        clean_tweet = ' '.join(clean_tweet.split())
+        clean_tweet = re.split((punctuation),string_)
+        #clean_tweet = ' '.join(clean_tweet.split())
         return clean_tweet
 
     # define output/print format
