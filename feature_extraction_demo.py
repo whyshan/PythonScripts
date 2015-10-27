@@ -1,6 +1,6 @@
-__author__ = 'bunny_gg'
 import string
 import csv
+import pickle
 
 
 # first, define a class for each line
@@ -115,18 +115,23 @@ file_path = "semeval2016-task6-trainingdata.txt"
 # get all tweets
 all_tweet_list = read_tweet_file(file_path, separator)  # arg separator can be ignored
 
+# pickle save
+pickle.dump(all_tweet_list, open("feature_extraction_temp.txt", "w"))
+# pickle read
+another_list = pickle.load(open("feature_extraction_temp.txt", "r"))
+
 # print some results: count, first and last line
-print "Count of all: ", len(all_tweet_list)
-print all_tweet_list[0]
+print "Count of all: ", len(another_list)
+print another_list[0]
 print "..."
-print all_tweet_list[-1]
+print another_list[-1]
 print
 
 # filter test
 filter_1 = "hillary"
 filter_2 = "AGAINST"
-list_with_hillary = tweet_filter(all_tweet_list, target=filter_1)
-list_with_hillary_and_against = tweet_filter(all_tweet_list, target=filter_1, stance=filter_2)
+list_with_hillary = tweet_filter(another_list, target=filter_1)
+list_with_hillary_and_against = tweet_filter(another_list, target=filter_1, stance=filter_2)
 print "Count of filter_1 (hillary) result: ", len(list_with_hillary)
 print list_with_hillary[0]
 print "..."
