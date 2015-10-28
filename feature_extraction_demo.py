@@ -1,6 +1,7 @@
 import string
 import csv
 import pickle
+import re
 
 
 # first, define a class for each line
@@ -50,16 +51,18 @@ class tweet_line:
                 self.statistics[word] = 1
 
     def remove_punctuation_from_string(self, string_):
-        # step 1: trans all punctuations to spaces
+        # step 1: trans all punctuations(except '#' and '@') to "punctuation between spaces"
         # punctuations should be kept as separate words.
         punctuation = string.punctuation
-        punctuation.pop("#")
-        punctuation.pop("@")
-        #trans_table = string.maketrans(punctuation, ' ' * len(punctuation))
-        #clean_tweet = string_.translate(trans_table)
+        punctuation = punctuation.replace('#', '')
+        punctuation = punctuation.replace('@', '')
+        for char in string_:
+            if char in punctuation:
+                string_ = string_.replace(char, ' ' + char + ' ')
+        # trans_table = string.maketrans(punctuation, ' ' * len(punctuation))
+        # clean_tweet = string_.translate(trans_table)
         # step 2: remove more spaces
-        clean_tweet = re.split((punctuation),string_)
-        #clean_tweet = ' '.join(clean_tweet.split())
+        clean_tweet = ' '.join(string_.split())
         return clean_tweet
 
     # define output/print format
