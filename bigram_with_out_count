@@ -1,0 +1,22 @@
+IN = open("blonde.txt")
+line = "XXX"
+bigrams = []
+last = ""
+
+while line:
+    line = IN.readline()
+    words = line.split()
+    # this handles the empty line
+    if len(words) < 1:
+        break
+    # this handles the first line
+    if (len(last) > 1):
+        bigrams.append([last, words[0]])
+    for i in range(0, len(words)-1):
+        bigrams.append([words[i], words[i+1]])
+    last = words[-1]
+
+IN.close()
+
+for big in bigrams:
+    print big[0], " ", big[1]
