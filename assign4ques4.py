@@ -14,7 +14,7 @@ start = clock()
 # Timer start -- end
 import re
 
-pattern = re.compile(r'\b(\w+/DT)(\s)(\w+/JJ)+(\s)(\w+/NN|NNS)')
+pattern = re.compile(r'(\b\w+/DT\s\w+/JJ+\s\w+/NN| NNS)')
 
 for eachline in newvm:
     match = pattern.findall(eachline)
@@ -24,10 +24,7 @@ for eachline in newvm:
 # print
 for result in results:
     for match in result:
-        string = ""
-        for word in match:
-            string += word
-        print string
+        print match
 
 # Timer end -- begin
 finish = clock()
