@@ -1,4 +1,5 @@
 import csv
+import pickle
 
 
 # this function is to find out the enlarged range
@@ -119,3 +120,6 @@ for info in all_info_list:
     # fight with single quote
     info = info.replace("\\\'", "\'").replace('\\\"', '\"')
     print info
+    
+# pickle save
+pickle.dump(all_info_list, open("feature_extraction_temp.txt", "w"))
