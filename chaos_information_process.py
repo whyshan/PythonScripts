@@ -34,23 +34,37 @@ def process_group(words_group):
                 combinations.append(id_range)
 
     # 2nd round, add missing lines into combinations and enlarge the range
-    # actually, the process of enlarging should be repeated until the result is constant #LAZY
-    for line in words_group:
-        id = line[1]
-        context = line[3]
-        for item in combinations:
-            min = item[0]
-            max = item[1]
-            if context >= min and context <= max:
-                new_item = get_range([min, max, id, context])
-                combinations.remove(item)
-                combinations.append(new_item)
+    # the process of enlarging should be repeated until the result is constant
+    if len(combinations) > 0:
+        while True:
+            last_combinations = []
+            last_combinations.extend(combinations)
+            for line in words_group:
+                id = line[1]
+                context = line[3]
+                for item in combinations:
+                    min = item[0]
+                    max = item[1]
+                    if context >= min and context <= max:
+                        new_item = get_range([min, max, id, context])
+                        combinations.remove(item)
+                        combinations.append(new_item)
+            is_changed = False
+            for i in range(0, len(combinations)):
+                if last_combinations[i][0] != combinations[i][0] or last_combinations[i][1] != combinations[i][1]:
+                    is_changed = True
+                    break
+            if not is_changed:
+                break
+            # following two lines can print which lines need repeating process
+            # else:
+            #     print words_group[0][0]
 
     # return results
     for item in combinations:
         min = item[0]
         max = item[1]
-        result_string = str(words_group[min - 1][0]) + ": " # print line number for readability
+        result_string = str(words_group[min - 1][0]) + ": "  # print line number for readability
         for i in range(min - 1, max):
             result_string += words_group[i][2] + " "
         # print result_string
@@ -82,23 +96,26 @@ def read_chaos_file(path, separator="\t"):
     return result
 
 
-def process_file(file_path, str1, str2):
-    lines = open(file_path).readline()
-    fp = open(file_path, 'w')
+def process_quote_in_file(file_path):
+    new_file_path = file_path + "_"
+    lines = open(file_path).readlines()
+    fp = open(new_file_path, 'w')
     for s in lines:
-        fp.write(s.replace(str1, str2))
+        fp.write(s.replace('\"', '\\\"').replace("\'", "\\\'"))
     fp.close()
+    return new_file_path
 
 
 # process starts
-# pre define separator and file path
 separator = "\t"
 file_path = "semeval2016-task6-trainingdata_sents_utf8.predict"
-# process_file(file_path, "'", "\'")
-# process_file(file_path, '"', '\"')
-# get all tweets
-all_info_list = read_chaos_file(file_path, separator)
-# print some results: count, first and last line
+
+# fight with single quote
+new_file_path = process_quote_in_file(file_path)
+
+all_info_list = read_chaos_file(new_file_path, separator)
 print "Count of all: ", len(all_info_list)
 for info in all_info_list:
+    # fight with single quote
+    info = info.replace("\\\'", "\'").replace('\\\"', '\"')
     print info
