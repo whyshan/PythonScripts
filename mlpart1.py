@@ -13,15 +13,15 @@ while line:
     if len(wp):
         words.pop(0)
         words.append(wp[0])
-        for x in words:
-            print x + "\t",
+        for word in words:
+            print word + "\t",
         print ""
     else:
         for z in range (0,2):
             words.pop(0)
             words.append('NULL')
-            for x in words:
-                print x + "\t",
+            for word in words:
+                print word + "\t",
             print ""
         words = ['NULL', 'NULL', 'NULL']
         for x in range(0,2):
