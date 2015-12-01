@@ -65,13 +65,21 @@ def process_group(words_group):
     for item in combinations:
         min = item[0]
         max = item[1]
+        # delete those combinations longer than 5 words
         if (max-min<5):
-            # result_string = str(words_group[min - 1][0]) + ": "  # print line number for readability
-            result_string = ""
+            has_v_tag = False
             for i in range(min - 1, max):
-                result_string += words_group[i][2] + " "
-            # print result_string
-            result.append(result_string)
+                if words_group[i][5] == "V":
+                    has_v_tag = True
+                    # print words_group[i][0], words_group[i][2]
+            # delete those combinations that have V tag
+            if not has_v_tag:
+                # result_string = str(words_group[min - 1][0]) + ": "  # print line number for readability
+                result_string = ""
+                for i in range(min - 1, max):
+                    result_string += words_group[i][2] + " "
+                # print result_string
+                result.append(result_string)
     return result
 
 
@@ -87,9 +95,10 @@ def read_chaos_file(path, separator="\t"):
             id = int(row[0])
             word = row[1]
             # print line_number, row[1]
+            tag = row[3]
             context = int(row[6])
             type = row[7]
-            words_group.append([line_number, id, word, context, type])
+            words_group.append([line_number, id, word, context, type, tag])
         else:
             # it means the end of one group
             group_result = process_group(words_group)
@@ -115,10 +124,10 @@ def process_quote_in_list(list):
         info = info.replace("\\\'", "\'").replace('\\\"', '\"')
         result.append(info)
     return result
-    
+
 def post_process(list):
-    unique_info = unique(list)
-    sorted = sort(unique_info)
+    sorted = sort(list)
+    # unique_info = unique(sorted)
     return sorted
     # all_info_list = sorted(set(all_info_list)) # Work for list?
     # if 5 spaces in member, delete it
@@ -146,6 +155,6 @@ all_info_list = process_quote_in_list(all_info_list)
 all_info_list = post_process(all_info_list)
 for line in all_info_list:
     print line
-    
+
 # pickle save
 pickle.dump(all_info_list, open("feature_extraction_temp.txt", "w"))
