@@ -134,8 +134,8 @@ def post_process(list):
     # if label has V, delete it
 
 def unique(list):
-    result = []
-    # TODO 1
+    result = set(list)
+    result = list(result)
     return result
 
 def sort(list):
