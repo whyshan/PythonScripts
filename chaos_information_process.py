@@ -125,21 +125,21 @@ def process_quote_in_list(list):
         result.append(info)
     return result
 
-def post_process(list):
-    sorted = sort(list)
-    # unique_info = unique(sorted)
+def post_process(l):
+    unique_info = unique(l)
+    sorted = sort(unique_info)
     return sorted
     # all_info_list = sorted(set(all_info_list)) # Work for list?
     # if 5 spaces in member, delete it
     # if label has V, delete it
 
-def unique(list):
-    result = set(list)
+def unique(l):
+    result = set(l)
     result = list(result)
     return result
 
-def sort(list):
-    result = sorted(list)
+def sort(l):
+    result = sorted(l)
     return result
 
 # process starts
