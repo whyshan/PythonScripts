@@ -143,7 +143,7 @@ new_file_path = process_quote_in_file(file_path)
 all_info_list = read_chaos_file(new_file_path, separator)
 print "Count of all: ", len(all_info_list)
 all_info_list = process_quote_in_list(all_info_list)
-# all_info_list = post_process(all_info_list)
+all_info_list = post_process(all_info_list)
 for line in all_info_list:
     print line
     
