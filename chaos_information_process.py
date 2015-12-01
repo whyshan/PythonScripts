@@ -105,7 +105,11 @@ def process_quote_in_file(file_path):
         fp.write(s.replace('\"', '\\\"').replace("\'", "\\\'"))
     fp.close()
     return new_file_path
-
+    
+def sort_uniq_minus5_minusverb(all_info_list):
+    all_info_list = sorted(set(all_info_list)) # Work for list?
+    # if 5 spaces in member, delete it
+    # if label has V, delete it 
 
 # process starts
 separator = "\t"
