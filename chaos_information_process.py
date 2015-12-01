@@ -105,11 +105,32 @@ def process_quote_in_file(file_path):
         fp.write(s.replace('\"', '\\\"').replace("\'", "\\\'"))
     fp.close()
     return new_file_path
+
+def process_quote_in_list(list):
+    result = []
+    for info in all_info_list:
+        # fight with single quote
+        info = info.replace("\\\'", "\'").replace('\\\"', '\"')
+        result.append(info)
+    return result
     
-def sort_uniq_minus5_minusverb(all_info_list):
-    all_info_list = sorted(set(all_info_list)) # Work for list?
+def post_process(list):
+    unique_info = unique(list)
+    sorted = sort(unique_info)
+    return sorted
+    # all_info_list = sorted(set(all_info_list)) # Work for list?
     # if 5 spaces in member, delete it
-    # if label has V, delete it 
+    # if label has V, delete it
+
+def unique(list):
+    result = []
+    # TODO 1
+    return result
+
+def sort(list):
+    result = []
+    # TODO 2
+    return result
 
 # process starts
 separator = "\t"
@@ -120,10 +141,10 @@ new_file_path = process_quote_in_file(file_path)
 
 all_info_list = read_chaos_file(new_file_path, separator)
 print "Count of all: ", len(all_info_list)
-for info in all_info_list:
-    # fight with single quote
-    info = info.replace("\\\'", "\'").replace('\\\"', '\"')
-    print info
+all_info_list = process_quote_in_list(all_info_list)
+# all_info_list = post_process(all_info_list)
+for line in all_info_list:
+    print line
     
 # pickle save
 pickle.dump(all_info_list, open("feature_extraction_temp.txt", "w"))
