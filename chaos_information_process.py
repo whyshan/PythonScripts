@@ -65,11 +65,13 @@ def process_group(words_group):
     for item in combinations:
         min = item[0]
         max = item[1]
-        result_string = str(words_group[min - 1][0]) + ": "  # print line number for readability
-        for i in range(min - 1, max):
-            result_string += words_group[i][2] + " "
-        # print result_string
-        result.append(result_string)
+        if (max-min<5):
+            # result_string = str(words_group[min - 1][0]) + ": "  # print line number for readability
+            result_string = ""
+            for i in range(min - 1, max):
+                result_string += words_group[i][2] + " "
+            # print result_string
+            result.append(result_string)
     return result
 
 
