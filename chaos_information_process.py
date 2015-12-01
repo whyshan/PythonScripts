@@ -128,8 +128,7 @@ def unique(list):
     return result
 
 def sort(list):
-    result = []
-    # TODO 2
+    result = sorted(list)
     return result
 
 # process starts
