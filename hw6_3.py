@@ -58,11 +58,10 @@ def printPosTags(pos):
 def ambiguityClassFrequency(pos):
     ambiguityClassFrequency = {}
     for word in pos:
-        if !(ambiguityClassFrequency.has_key(word[1])):
-            ambiguityClassFrequency.append(word[1])
+        if not ambiguityClassFrequency.has_key(word[1]):
             ambiguityClassFrequency[word[1]] = 0
         ambiguityClassFrequency[word[1]] += 1
-
+    print ambiguityClassFrequency
 
 # Main
 
@@ -78,7 +77,7 @@ print "(b) It provides a list of all words that have a given number of POS tags.
 print "(c) It provides a list of all POS tags used in the file."
 print "(d) It provides a list of all ambiguity classes and their frequency."
 
-option = raw_input("Please choose one option to begin: (a/b) ")
+option = raw_input("Please choose one option to begin: (a/b/c/d) ")
 
 if option == "a":
     printAmbiguityClass(ambiguition)
