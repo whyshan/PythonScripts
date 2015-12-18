@@ -174,7 +174,7 @@ file_path = "semeval2016-task6-trainingdata_sents_utf8.predict"
 
 # fight with single quote
 new_file_path = process_quote_in_file(file_path)
-
+# get results
 all_info_list, proper_noun_list = read_chaos_file(new_file_path, separator)
 delete_file(new_file_path)
 
