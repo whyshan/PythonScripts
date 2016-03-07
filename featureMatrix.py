@@ -79,6 +79,7 @@ def createFeatureMatrix(contextfeature, wordclasslist):
 # Main
 
 # Open the files and read in the data
+print 'please input the file name: '
 fileName = raw_input(" ")
 wordClassList = openRead(fileName)
 
@@ -86,13 +87,16 @@ wordClassList = openRead(fileName)
 contextFeature = extractContextFeature(wordClassList)
 
 import time
-
 start_time = time.time()
 # Create feature matrix
 featureMatrix = createFeatureMatrix(contextFeature, wordClassList)
 elapsed_time = time.time() - start_time
 print elapsed_time
 
-f = open(fileName + "_matrix.txt", 'wb')
-f.write(featureMatrix)
-f.close()
+# write to file
+fileWriter = open(fileName + "_matrix.txt", 'wb')
+for featureline in featureMatrix:
+    for bit in featureline:
+        fileWriter.write(str(bit)+'\t')
+    fileWriter.write('\n')
+fileWriter.close()
