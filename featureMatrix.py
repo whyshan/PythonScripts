@@ -8,56 +8,72 @@
 # minidom
 from xml.dom import minidom
 
+
 # Define wordClass
 class wordClass:
-	
-	def __init__(self, instanceId, senseId, context):
-		self.instancdId = instanceId
-		self.sensId = senseId
-		self.context = context
+    def __init__(self, instanceId, senseId, context):
+        self.instancdId = instanceId
+        self.sensId = senseId
+        self.context = context
+
 
 # Open the files and read in the data
 def openRead(fileName):
-	
-	xmlDoc = minidom.parse(fileName)
+    xmlDoc = minidom.parse(fileName)
 
-	instanceList = xmlDoc.getElementsByTagName('instance')
-	print(len(instanceList))
-	for instance in instanceList:
-    	print(instance.attributes['id'].value)
+    instanceList = xmlDoc.getElementsByTagName('instance')
+    # print(len(instanceList))
+    # for instance in instanceList:
+    #     print(instance.attributes['id'].value)
 
-	answerList = xmlDoc.getElementsByTagName('answer')
-	print(len(answerList))
-	for answer in answerList:
-    	print(answer.attributes['senseid'].value)
+    answerList = xmlDoc.getElementsByTagName('answer')
+    # print(len(answerList))
+    # for answer in answerList:
+    #     print(answer.attributes['senseid'].value)
 
-	contextList = xmlDoc.getElementsByTagName('context')
-	print(len(contextList))
-	for context in contextlist:
-   		print(context.firstChild.nodeValue)
+    contextList = xmlDoc.getElementsByTagName('context')
+    # print(len(contextList))
+    # for context in contextList:
+    #     print(context.firstChild.nodeValue)
 
-   	i = 0
-   	wordClassList = []
-   	while i < len(instanceList):
-   		wordClassList[i].wordClass(instancelist[i].attributes['id'].value， answerlist[i].attributes['senseid'].value， contextlist[i].firstChild.nodeValue)
-   		i += 1
+    i = 0
+    worldclasslist = []
+    while i < len(instanceList):
+        worldclasslist.append(
+            wordClass(instanceList[i].attributes['id'].value, answerList[i].attributes['senseid'].value,
+                      contextList[i].firstChild.nodeValue))
+        i += 1
 
-   	return wordClassList
+    return worldclasslist
 
+
+# varibles in arguments and def should be different from varibles outside
 # Extract context features
-def extractContextFeature(wordClassList):
-	
-	i = 0
-	contextFeature = ""
-	while i < len(wordClassList):
-		contextFeature += wordClassList[i].context
-		i += 1
+def extractContextFeature(wordclasslist):
+    i = 0
+    contextfeature = ""
+    while i < len(wordclasslist):
+        contextfeature += wordclasslist[i].context
+        i += 1
+    contextfeature = contextfeature.replace('\n', '')
+    contextfeature = contextfeature.split(" ")
+    contextfeature = list(set(contextfeature))
+    contextfeature.remove('')
+    return contextfeature
 
-	contextFeature.split(" ")
-	
-	contextFeature = list(set(contextFeature))
 
-	return contextFeature
+def createFeatureMatrix(contextfeature, wordclasslist):
+    featurematrix = []
+    for wordclass in wordclasslist:
+        wordclasscontext = wordclass.context.replace('\n', '').split(' ')
+        featureline = [0] * len(contextfeature)
+        for i in range(0, len(featureline)):
+            for word in wordclasscontext:
+                if word == contextfeature[i]:
+                    featureline[i] = 1
+                    # break
+        featurematrix.append(featureline)
+    return featurematrix
 
 
 # Main
@@ -69,5 +85,14 @@ wordClassList = openRead(fileName)
 # Extract context features
 contextFeature = extractContextFeature(wordClassList)
 
+import time
+
+start_time = time.time()
 # Create feature matrix
-featureMatrix = createFeatureMatrix(contextFeature)
+featureMatrix = createFeatureMatrix(contextFeature, wordClassList)
+elapsed_time = time.time() - start_time
+print elapsed_time
+
+f = open(fileName + "_matrix.txt", 'wb')
+f.write(featureMatrix)
+f.close()
