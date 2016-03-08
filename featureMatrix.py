@@ -100,3 +100,11 @@ for featureline in featureMatrix:
         fileWriter.write(str(bit)+'\t')
     fileWriter.write('\n')
 fileWriter.close()
+
+# read file
+fileReader = open(fileName + "_matrix.txt")
+lines = fileReader.readlines()
+listMatrix = []
+for line in lines:
+    linelist = line.strip().split('\t')
+    listMatrix.append(linelist)
