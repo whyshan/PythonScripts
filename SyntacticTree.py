@@ -6,7 +6,11 @@ class syntactic_node:
         self.syntactic = syntactic
         self.parent = parent
         self.lexical = lexical
-        self.child = []
+        self.children = []
+
+    def __str__(self):
+        return str(self.id)
+
 
 def generate_tree(elements):
     result = []
@@ -34,9 +38,70 @@ def generate_tree(elements):
     for node in result:
         for n in result:
             if n.parent == node:
-                node.child.append(n.id)
+                node.children.append(n)
     return result
 
+
+def passive_2_active(tree):
+    for node in tree:
+
+        # 5 Conditions
+        is_PP = False
+        has_VP_upper_parent = False
+        VP_upper_parent = None
+        has_IN_by_child = False
+        has_NP_child = False
+        NP_child = None
+        has_NP_parent_sibling = False
+        NP_parent_sibling = None
+
+        # condition 1: node is PP
+        if node.syntactic == 'PP':
+            is_PP = True
+
+        # condition 2: find the top VP
+        temp_node = node
+        while temp_node.parent != None:
+            if temp_node.parent.syntactic == 'VP':
+                has_VP_upper_parent = True
+                VP_upper_parent = temp_node.parent
+            temp_node = temp_node.parent
+
+        # condition 3: child is IN-by
+        for child in node.children:
+            if child.syntactic == 'IN' and child.lexical == 'by':
+                has_IN_by_child = True
+
+        # condition 4: has a NP child
+        for child in node.children:
+            if child.syntactic == 'NP':
+                has_NP_child = True
+                NP_child = child
+
+        # find top VP's NP sibling
+        if VP_upper_parent != None:
+            if VP_upper_parent.parent != None:
+                    for sibling in VP_upper_parent.parent.children:
+                        if sibling.syntactic == 'NP':
+                            has_NP_parent_sibling = True
+                            NP_parent_sibling = sibling
+
+        if is_PP and has_VP_upper_parent and has_IN_by_child and has_NP_child and has_NP_parent_sibling:
+            # change id: NP_child & NP_top
+            temp = NP_child.id
+            NP_child.id = NP_parent_sibling.id
+            NP_parent_sibling.id = temp
+
+            # change parent
+            temp = NP_child.parent
+            NP_child.parent = NP_parent_sibling.parent
+            NP_parent_sibling,parent = temp
+
+            # change parents' children: NP_child & NP_top
+            NP_child_index = NP_child.parent.children.index(NP_child)
+            NP_parent_sibling_index = NP_parent_sibling.parent.children.index(NP_parent_sibling)
+            NP_child.parent.children[NP_child_index]=NP_parent_sibling
+            NP_parent_sibling.parent.children[NP_parent_sibling_index]=NP_child
 
 filename = "passives_curated.parsed"
 tree_original_file = open(filename, "r")
@@ -47,15 +112,23 @@ for eachline in tree_original_file:
     elements = line_with_space.split()
     tree_list.append(generate_tree(elements))
 
+passive_2_active(tree_list[2])
+
 # print test
-for node in tree_list[-1]:
+for node in tree_list[2]:
     if (node.parent == None):
         parent = "NULL"
     else:
         parent = node.parent.syntactic
-    print "SYN: ", node.syntactic, " | PARENT: ", parent, " | LEX: ", node.lexical, " | ID: ", node.id, " | CHILD: ", node.child
+    child_id = ''
+    for child in node.children:
+        child_id += str(child)+" "
+    child_id.strip()
+    print "SYN: ", node.syntactic, " | PARENT: ", parent, " | LEX: ", node.lexical, " | ID: ", node.id, " | CHILD: ", child_id
 
-# pickle save
-pickle.dump(tree_list, open("syntactic_tree_pickle.txt", "w"))
-# pickle read
-another_list = pickle.load(open("syntactic_tree_pickle.txt", "r"))
+
+
+    # pickle save
+    # pickle.dump(tree_list, open("syntactic_tree_pickle.txt", "w"))
+    # pickle read
+    # another_list = pickle.load(open("syntactic_tree_pickle.txt", "r"))
