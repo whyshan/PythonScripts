@@ -35,11 +35,16 @@ def generate_tree(elements):
                 upper_level = upper_level.parent
 
     # get children
-    for node in result:
-        for n in result:
+    refresh_children(result)
+    return result
+
+
+def refresh_children(tree):
+    for node in tree:
+        node.children=[]
+        for n in tree:
             if n.parent == node:
                 node.children.append(n)
-    return result
 
 
 def passive_2_active(tree):
@@ -95,13 +100,10 @@ def passive_2_active(tree):
             # change parent
             temp = NP_child.parent
             NP_child.parent = NP_parent_sibling.parent
-            NP_parent_sibling,parent = temp
+            NP_parent_sibling.parent = temp
 
-            # change parents' children: NP_child & NP_top
-            NP_child_index = NP_child.parent.children.index(NP_child)
-            NP_parent_sibling_index = NP_parent_sibling.parent.children.index(NP_parent_sibling)
-            NP_child.parent.children[NP_child_index]=NP_parent_sibling
-            NP_parent_sibling.parent.children[NP_parent_sibling_index]=NP_child
+            # refresh children
+            refresh_children(tree)
 
 filename = "passives_curated.parsed"
 tree_original_file = open(filename, "r")
@@ -112,10 +114,11 @@ for eachline in tree_original_file:
     elements = line_with_space.split()
     tree_list.append(generate_tree(elements))
 
-passive_2_active(tree_list[2])
+for tree in tree_list:
+    passive_2_active(tree)
 
 # print test
-for node in tree_list[2]:
+for node in tree_list[1]:
     if (node.parent == None):
         parent = "NULL"
     else:
