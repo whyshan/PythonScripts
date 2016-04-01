@@ -1,5 +1,6 @@
 import pickle
 
+
 class syntactic_node:
     def __init__(self, id, syntactic, parent, lexical=''):
         self.id = id
@@ -9,7 +10,17 @@ class syntactic_node:
         self.children = []
 
     def __str__(self):
-        return str(self.id)
+        if (self.parent == None):
+            parent = "NULL"
+        else:
+            parent = self.parent.syntactic
+        child_id = ''
+        for child in self.children:
+            child_id += str(child.id) + " "
+        child_id.strip()
+        result = "SYN: " + self.syntactic + " | PARENT: " + parent + " | LEX: " + self.lexical + " | ID: " + str(
+            self.id) + " | CHILD: " + child_id
+        return result
 
 
 def generate_tree(elements):
@@ -41,7 +52,7 @@ def generate_tree(elements):
 
 def refresh_children(tree):
     for node in tree:
-        node.children=[]
+        node.children = []
         for n in tree:
             if n.parent == node:
                 node.children.append(n)
@@ -86,10 +97,10 @@ def passive_2_active(tree):
         # find top VP's NP sibling
         if VP_upper_parent != None:
             if VP_upper_parent.parent != None:
-                    for sibling in VP_upper_parent.parent.children:
-                        if sibling.syntactic == 'NP':
-                            has_NP_parent_sibling = True
-                            NP_parent_sibling = sibling
+                for sibling in VP_upper_parent.parent.children:
+                    if sibling.syntactic == 'NP':
+                        has_NP_parent_sibling = True
+                        NP_parent_sibling = sibling
 
         if is_PP and has_VP_upper_parent and has_IN_by_child and has_NP_child and has_NP_parent_sibling:
             # change id: NP_child & NP_top
@@ -105,6 +116,7 @@ def passive_2_active(tree):
             # refresh children
             refresh_children(tree)
 
+
 filename = "passives_curated.parsed"
 tree_original_file = open(filename, "r")
 tree_list = []
@@ -119,15 +131,7 @@ for tree in tree_list:
 
 # print test
 for node in tree_list[1]:
-    if (node.parent == None):
-        parent = "NULL"
-    else:
-        parent = node.parent.syntactic
-    child_id = ''
-    for child in node.children:
-        child_id += str(child)+" "
-    child_id.strip()
-    print "SYN: ", node.syntactic, " | PARENT: ", parent, " | LEX: ", node.lexical, " | ID: ", node.id, " | CHILD: ", child_id
+    print node
 
 
 
