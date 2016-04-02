@@ -56,7 +56,7 @@ def refresh_children(tree):
         for n in tree:
             if n.parent == node:
                 node.children.append(n)
-
+        node.children.sort(key=lambda child:child.id)
 
 def passive_2_active(tree):
     for node in tree:
@@ -116,6 +116,28 @@ def passive_2_active(tree):
             # refresh children
             refresh_children(tree)
 
+def print_tree(tree):
+    root = None
+    for node in tree:
+        if node.id == 0:
+            root = node
+            break
+    result = []
+    read(root, result)
+    print result
+
+def read(node, result):
+    if node == None:
+        return None
+    elif len(node.children)>0:
+        if len(node.lexical)>0:
+            result.append(node.lexical)
+        for child in node.children:
+            read(child, result)
+    else:
+        if len(node.lexical)>0:
+            result.append(node.lexical)
+            # print result+" ",
 
 filename = "passives_curated.parsed"
 tree_original_file = open(filename, "r")
@@ -130,10 +152,10 @@ for tree in tree_list:
     passive_2_active(tree)
 
 # print test
-for node in tree_list[1]:
+for node in tree_list[-1]:
     print node
 
-
+print_tree(tree_list[-1])
 
     # pickle save
     # pickle.dump(tree_list, open("syntactic_tree_pickle.txt", "w"))
